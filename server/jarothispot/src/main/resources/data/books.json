@@ -1,0 +1,50 @@
+[
+  {
+    "title": "Neuromancer",
+    "description": "Un clásico del ciberpunk sobre hackers, IA y megacorporaciones.",
+    "price": 19.99,
+    "stock": 15,
+    "imageUrl": "https://picsum.photos/seed/neuromancer/400/600",
+    "categoriesByName": ["Cyberpunk", "Sci Fi"]
+  },
+  {
+    "title": "Dune",
+    "description": "Intriga política y ecológica en Arrakis.",
+    "price": 24.90,
+    "stock": 20,
+    "imageUrl": "https://picsum.photos/seed/dune/400/600",
+    "categoriesByName": ["Sci Fi", "Novela"]
+  },
+  {
+    "title": "El mundo de Sofía",
+    "description": "Introducción a la filosofía a través de una novela.",
+    "price": 17.50,
+    "stock": 12,
+    "imageUrl": "https://picsum.photos/seed/sofia/400/600",
+    "categoriesByName": ["Filosofia", "Novela"]
+  },
+  {
+    "title": "Akira Vol. 1",
+    "description": "Manga icónico de ciencia ficción en Neo-Tokyo.",
+    "price": 14.99,
+    "stock": 8,
+    "imageUrl": "https://picsum.photos/seed/akira/400/600",
+    "categoriesByName": ["Manga", "Sci Fi"]
+  },
+  {
+    "title": "1984",
+    "description": "Distopía sobre vigilancia y control.",
+    "price": 15.99,
+    "stock": 25,
+    "imageUrl": "https://picsum.photos/seed/1984/400/600",
+    "categoriesByName": ["Novela", "Filosofia"]
+  },
+  {
+    "title": "Snow Crash",
+    "description": "Metaverso, lenguajes antiguos y corporaciones.",
+    "price": 18.99,
+    "stock": 10,
+    "imageUrl": "https://picsum.photos/seed/snowcrash/400/600",
+    "categoriesByName": ["Cyberpunk", "Sci Fi"]
+  }
+]

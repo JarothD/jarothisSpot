@@ -17,6 +17,9 @@ public class User {
   @Column(name = "email", nullable = false)
   private String email;
 
+  @Column(name = "phone")
+  private String phone;
+
   @Column(name = "password_hash", nullable = false)
   private String passwordHash;
 
@@ -39,6 +42,8 @@ public class User {
   public void setId(UUID id) { this.id = id; }
   public String getEmail() { return email; }
   public void setEmail(String email) { this.email = email; }
+  public String getPhone() { return phone; }
+  public void setPhone(String phone) { this.phone = phone; }
   public String getPasswordHash() { return passwordHash; }
   public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
   public Set<Role> getRoles() { return roles; }

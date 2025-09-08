@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { login } from '@features/auth/api/auth.api'
 import { useAuthStore } from '@features/auth/model/auth.store'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import axios from 'axios'
 
 /**
@@ -32,7 +32,12 @@ export function LoginForm() {
   const setAccessToken = useAuthStore((s) => s.setAccessToken)
   const navigate = useNavigate()
   const location = useLocation()
-  const fromPath = isFromState(location.state) && location.state.from?.pathname ? location.state.from.pathname : '/'
+  
+  // Check for redirect in URL params or location state
+  const searchParams = new URLSearchParams(location.search)
+  const redirectParam = searchParams.get('redirect')
+  const fromPath = redirectParam || 
+    (isFromState(location.state) && location.state.from?.pathname ? location.state.from.pathname : '/')
 
   const [formError, setFormError] = useState<string | null>(null)
 
@@ -118,10 +123,17 @@ export function LoginForm() {
         type="submit"
         disabled={isSubmitting}
         aria-busy={isSubmitting || undefined}
-        className="inline-flex w-full items-center justify-center rounded bg-black px-4 py-2 text-white disabled:opacity-60"
+        className="btn btn-interactive hover:animate-shake w-full bg-black text-white disabled:opacity-60"
       >
         {isSubmitting ? 'Signing in…' : 'Sign in'}
       </button>
+
+      <div className="text-center text-sm">
+        <span className="text-gray-600">Don't have an account? </span>
+        <Link to="/register" className="text-black underline hover:no-underline">
+          Sign up
+        </Link>
+      </div>
     </form>
   )
 }
