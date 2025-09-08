@@ -12,7 +12,7 @@ export function HomePage() {
   }, [loadCategories, loadProducts])
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-semibold mb-4">Books</h1>
+      <h1 className="text-2xl font-semibold mb-4 text-white dark:text-white">Books</h1>
       <FiltersBar />
       <ProductGrid />
     </div>

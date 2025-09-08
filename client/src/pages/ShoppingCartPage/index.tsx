@@ -4,6 +4,7 @@ import { useCartStore } from '@features/cart/model/cart.store'
 import { useAuthStore } from '@features/auth/model/auth.store'
 import { toast } from '@shared/store/toast.store'
 import { CartSkeleton } from '@shared/ui/CartSkeleton'
+import { buildImage } from '@shared/utils/image'
 
 export function ShoppingCartPage() {
   const navigate = useNavigate()
@@ -98,7 +99,7 @@ export function ShoppingCartPage() {
       <div className="container mx-auto px-4 py-6">
         <h1 className="text-2xl font-semibold mb-6">Shopping Cart</h1>
         <div className="text-center py-12">
-          <p className="text-neutral-500 mb-4">Your cart is empty</p>
+          <p className="text-neutral-300 mb-4">Your cart is empty</p>
           <button
             onClick={() => navigate('/')}
             className="btn btn-interactive hover:animate-shake bg-blue-600 text-white px-6 py-3 rounded-lg"
@@ -112,7 +113,7 @@ export function ShoppingCartPage() {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-semibold mb-6">Shopping Cart</h1>
+      <h1 className="text-2xl font-semibold mb-6 text-white dark:text-white">Shopping Cart</h1>
       
       {/* Selection Controls */}
       <div className="flex items-center justify-between mb-4 p-4 bg-neutral-50 dark:bg-neutral-800 rounded-lg">
@@ -124,15 +125,15 @@ export function ShoppingCartPage() {
               onChange={(e) => e.target.checked ? selectAllItems() : clearSelection()}
               className="rounded"
             />
-            <span className="text-sm font-medium">
+            <span className="text-sm font-medium text-white dark:text-white">
               Select All ({selectedCount}/{cart.items.length})
             </span>
           </label>
         </div>
         
         {selectedCount > 0 && (
-          <div className="text-sm text-neutral-600 dark:text-neutral-400">
-            Selected total: <span className="font-semibold">${totalSelected.toFixed(2)}</span>
+          <div className="text-sm text-neutral-300 dark:text-neutral-300">
+            Selected total: <span className="font-semibold text-white dark:text-white">${totalSelected.toFixed(2)}</span>
           </div>
         )}
       </div>
@@ -159,14 +160,28 @@ export function ShoppingCartPage() {
                 className="mt-1 rounded"
               />
               
+              {/* Product Image */}
+              <img
+                src={buildImage(item.imageUrl, 80, 120)}
+                alt={item.title}
+                width={80}
+                height={120}
+                loading="lazy"
+                decoding="async"
+                className="w-20 h-30 object-cover rounded bg-neutral-200 dark:bg-neutral-700"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = '/placeholder-book.svg'
+                }}
+              />
+              
               {/* Item Details */}
               <div className="flex-1">
-                <h3 className="font-semibold text-lg">{item.title}</h3>
-                <p className="text-neutral-600 dark:text-neutral-400">${item.price?.toFixed(2) || '0.00'} each</p>
+                <h3 className="font-semibold text-lg text-white dark:text-white">{item.title}</h3>
+                <p className="text-neutral-300 dark:text-neutral-300">${item.price?.toFixed(2) || '0.00'} each</p>
                 
                 {/* Quantity Controls */}
                 <div className="flex items-center gap-3 mt-3">
-                  <span className="text-sm">Quantity:</span>
+                  <span className="text-sm text-white dark:text-white">Quantity:</span>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleQuantityChange(item.id, item.qty - 1)}
@@ -175,7 +190,7 @@ export function ShoppingCartPage() {
                     >
                       -
                     </button>
-                    <span className="w-12 text-center font-medium">{item.qty}</span>
+                    <span className="w-12 text-center font-medium text-white dark:text-white">{item.qty}</span>
                     <button
                       onClick={() => handleQuantityChange(item.id, item.qty + 1)}
                       className="w-8 h-8 rounded border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:animate-shake"
@@ -188,10 +203,10 @@ export function ShoppingCartPage() {
               
               {/* Subtotal and Remove */}
               <div className="text-right">
-                <div className="font-semibold text-lg mb-2">${((item.price || 0) * (item.qty || 0)).toFixed(2)}</div>
+                <div className="font-semibold text-lg mb-2 text-white dark:text-white">${((item.price || 0) * (item.qty || 0)).toFixed(2)}</div>
                 <button
                   onClick={() => handleRemoveItem(item.id)}
-                  className="text-red-600 hover:text-red-800 text-sm"
+                  className="text-red-400 hover:text-red-300 text-sm"
                 >
                   Remove
                 </button>
@@ -205,10 +220,10 @@ export function ShoppingCartPage() {
       <div className="border-t pt-6">
         <div className="flex justify-between items-center mb-4">
           <div className="text-lg">
-            <span className="text-neutral-600 dark:text-neutral-400">Cart Total: </span>
-            <span className="font-semibold">${cart.subtotal?.toFixed(2) || '0.00'}</span>
+            <span className="text-neutral-300 dark:text-neutral-300">Cart Total: </span>
+            <span className="font-semibold text-white dark:text-white">${cart.subtotal?.toFixed(2) || '0.00'}</span>
           </div>
-          <div className="text-sm text-neutral-500">
+          <div className="text-sm text-neutral-300">
             {cart.items.reduce((sum, item) => sum + item.qty, 0)} {cart.items.reduce((sum, item) => sum + item.qty, 0) === 1 ? 'item' : 'items'}
           </div>
         </div>
@@ -217,7 +232,7 @@ export function ShoppingCartPage() {
         <div className="flex gap-4 justify-end">
           <button
             onClick={() => navigate('/')}
-            className="btn btn-interactive hover:animate-shake px-6 py-3 border border-neutral-300 dark:border-neutral-600"
+            className="btn btn-interactive hover:animate-shake px-6 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             Continue Shopping
           </button>

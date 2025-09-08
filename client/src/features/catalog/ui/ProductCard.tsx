@@ -179,11 +179,11 @@ export function ProductCard({ p }: { readonly p: ProductDTO }) {
           loading="lazy"
           decoding="async"
           className="w-full h-full object-cover"
-          onError={(e)=>{(e.currentTarget as HTMLImageElement).src='/placeholder-book.png'}}
+          onError={(e)=>{(e.currentTarget as HTMLImageElement).src='/placeholder-book.svg'}}
         />
       </div>
-      <h3 className="font-semibold line-clamp-2">{p.title}</h3>
-      <p className="text-sm text-neutral-500 line-clamp-2">{p.description}</p>
+      <h3 className="font-semibold line-clamp-2 text-white dark:text-white">{p.title}</h3>
+      <p className="text-sm text-neutral-300 dark:text-neutral-300 line-clamp-2">{p.description}</p>
       <div className="flex flex-wrap gap-2 my-2">
         {p.categories?.map(c=>(
           <span key={c.id} className="px-2 py-0.5 rounded-full text-xs font-medium text-white"
@@ -191,9 +191,9 @@ export function ProductCard({ p }: { readonly p: ProductDTO }) {
         ))}
       </div>
       <div className="flex items-center justify-between mt-2">
-        <div className="font-semibold">${p.price.toFixed(2)}</div>
+        <div className="font-semibold text-white dark:text-white">${p.price.toFixed(2)}</div>
         {p.stock !== undefined && (
-          <div className="text-xs text-neutral-500">
+          <div className="text-xs text-neutral-300 dark:text-neutral-300">
             Stock: {p.stock}
           </div>
         )}

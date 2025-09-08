@@ -22,7 +22,7 @@ export function FiltersBar() {
           onClick={() => handleCategory()}
           aria-pressed={!filters.categoryId}
           className={`px-3 py-1 rounded-full border transition duration-150 ease-out transform-gpu
-                      ${!filters.categoryId ? 'bg-black text-white dark:bg-white dark:text-black' : 'btn-interactive hover:animate-shake'}`}
+                      ${!filters.categoryId ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white' : 'btn-interactive hover:animate-shake bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700'}`}
         >
           All
         </button>
@@ -47,7 +47,7 @@ export function FiltersBar() {
             <button
               key={c.id}
               aria-pressed="false"
-              className={`${base} btn-interactive hover:animate-shake`}
+              className={`${base} btn-interactive hover:animate-shake bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700`}
               style={{ borderColor: c.colorHex, color: c.colorHex, willChange: 'transform' }}
               onClick={() => handleCategory(c.id)}
             >
@@ -57,10 +57,11 @@ export function FiltersBar() {
         })}
       </div>
       <form onSubmit={handleSearch} className="flex gap-2">
-        <input className="border rounded-lg px-3 py-1 w-64" placeholder="Search books..."
+        <input className="border rounded-lg px-3 py-1 w-64 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400" 
+               placeholder="Search books..."
                value={q} onChange={(e:ChangeEvent<HTMLInputElement>)=>setQ(e.target.value)} />
-        <button className="btn btn-interactive hover:animate-shake" type="submit">Search</button>
-        <button type="button" className="btn btn-interactive hover:animate-shake"
+        <button className="btn btn-interactive hover:animate-shake bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700" type="submit">Search</button>
+        <button type="button" className="btn btn-interactive hover:animate-shake bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700"
                 onClick={()=>{ clearFilters(); setQ(''); loadProducts({ q: undefined, categoryId: undefined, page: 0 }) }}>
           Reset
         </button>

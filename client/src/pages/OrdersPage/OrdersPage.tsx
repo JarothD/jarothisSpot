@@ -111,7 +111,7 @@ export function OrdersPage() {
   if (loading && orders.length === 0) {
     return (
       <div className="container mx-auto px-4 py-6">
-        <h1 className="text-2xl font-semibold mb-6">My Orders</h1>
+        <h1 className="text-2xl font-semibold mb-6 text-white dark:text-white">My Orders</h1>
         <div className="grid gap-4 md:gap-6">
           {Array.from({ length: 4 }, (_, i) => (
             <OrderSkeleton key={i} />
@@ -124,9 +124,9 @@ export function OrdersPage() {
   if (error) {
     return (
       <div className="container mx-auto px-4 py-6">
-        <h1 className="text-2xl font-semibold mb-6">My Orders</h1>
+        <h1 className="text-2xl font-semibold mb-6 text-white dark:text-white">My Orders</h1>
         <div className="text-center py-12">
-          <p className="text-red-600 mb-4">{error}</p>
+          <p className="text-red-400 mb-4">{error}</p>
           <button
             onClick={() => setPage(0)}
             className="btn btn-interactive hover:animate-shake bg-blue-600 text-white px-6 py-3 rounded-lg"
@@ -141,9 +141,9 @@ export function OrdersPage() {
   if (orders.length === 0) {
     return (
       <div className="container mx-auto px-4 py-6">
-        <h1 className="text-2xl font-semibold mb-6">My Orders</h1>
+        <h1 className="text-2xl font-semibold mb-6 text-white dark:text-white">My Orders</h1>
         <div className="text-center py-12">
-          <p className="text-neutral-500 mb-4">No orders found</p>
+          <p className="text-neutral-300 mb-4">No orders found</p>
           <button
             onClick={() => navigate('/')}
             className="btn btn-interactive hover:animate-shake bg-blue-600 text-white px-6 py-3 rounded-lg"
@@ -157,7 +157,7 @@ export function OrdersPage() {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-semibold mb-6">My Orders</h1>
+      <h1 className="text-2xl font-semibold mb-6 text-white dark:text-white">My Orders</h1>
       
       {/* Orders List */}
       <div className="grid gap-4 md:gap-6 mb-8">
@@ -169,10 +169,10 @@ export function OrdersPage() {
             {/* Order Header */}
             <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
               <div className="mb-4 md:mb-0">
-                <h3 className="font-semibold text-lg">
+                <h3 className="font-semibold text-lg text-white dark:text-white">
                   #{order.id.slice(0, 8)}
                 </h3>
-                <p className="text-neutral-600 dark:text-neutral-400">
+                <p className="text-neutral-300 dark:text-neutral-300">
                   {formatDate(order.createdAt)}
                 </p>
               </div>
@@ -184,7 +184,7 @@ export function OrdersPage() {
                 `}>
                   {order.status}
                 </span>
-                <p className="font-semibold text-xl">
+                <p className="font-semibold text-xl text-white dark:text-white">
                   {money(order.total)}
                 </p>
               </div>
@@ -194,7 +194,7 @@ export function OrdersPage() {
             <button
               onClick={() => toggle(order.id)}
               aria-expanded={expanded.has(order.id)}
-              className="btn btn-interactive hover:animate-shake border border-neutral-300 dark:border-neutral-600 px-4 py-2 rounded-lg text-sm font-medium"
+              className="btn btn-interactive hover:animate-shake border border-neutral-300 dark:border-neutral-600 px-4 py-2 rounded-lg text-sm font-medium bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               {expanded.has(order.id) ? 'Hide Details' : 'Show Details'}
             </button>
@@ -202,7 +202,7 @@ export function OrdersPage() {
             {/* Order Items (Expandable) */}
             {expanded.has(order.id) && (
               <div className="mt-6 border-t border-neutral-200 dark:border-neutral-700 pt-6">
-                <h4 className="font-medium mb-4">Order Items</h4>
+                <h4 className="font-medium mb-4 text-white dark:text-white">Order Items</h4>
                 <div className="space-y-4">
                   {order.items.map((item, index) => (
                     <div
@@ -211,7 +211,7 @@ export function OrdersPage() {
                     >
                       {/* Product Image */}
                       <img
-                        src={buildImage(item.imageUrl, 64, 96)}
+                        src={item.imageUrl ? buildImage(item.imageUrl, 64, 96) : '/placeholder-book.svg'}
                         alt={item.title}
                         width={64}
                         height={96}
@@ -219,23 +219,23 @@ export function OrdersPage() {
                         decoding="async"
                         className="w-16 h-24 object-cover rounded bg-neutral-200 dark:bg-neutral-700"
                         onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).src = '/placeholder-book.png'
+                          (e.currentTarget as HTMLImageElement).src = '/placeholder-book.svg'
                         }}
                       />
                       
                       {/* Item Details */}
                       <div className="flex-1 min-w-0">
-                        <h5 className="font-medium line-clamp-2 mb-1">
+                        <h5 className="font-medium line-clamp-2 mb-1 text-white dark:text-white">
                           {item.title}
                         </h5>
-                        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                        <p className="text-sm text-neutral-300 dark:text-neutral-300">
                           {item.qty} × {money(item.unitPrice)} = {money(item.lineTotal)}
                         </p>
                       </div>
                       
                       {/* Line Total */}
                       <div className="text-right">
-                        <p className="font-semibold">
+                        <p className="font-semibold text-white dark:text-white">
                           {money(item.lineTotal)}
                         </p>
                       </div>
@@ -254,19 +254,19 @@ export function OrdersPage() {
           <button
             disabled={page <= 0 || loading}
             onClick={() => setPage(page - 1)}
-            className="btn btn-interactive hover:animate-shake disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg"
+            className="btn btn-interactive hover:animate-shake disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             Prev
           </button>
           
-          <span className="text-sm text-neutral-600 dark:text-neutral-400">
+          <span className="text-sm text-neutral-300 dark:text-neutral-300">
             Page {page + 1} of {totalPages}
           </span>
           
           <button
             disabled={page + 1 >= totalPages || loading}
             onClick={() => setPage(page + 1)}
-            className="btn btn-interactive hover:animate-shake disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg"
+            className="btn btn-interactive hover:animate-shake disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             Next
           </button>

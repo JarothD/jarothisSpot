@@ -1,0 +1,9 @@
+<svg width="400" height="600" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="600" fill="#f3f4f6"/>
+  <rect x="50" y="100" width="300" height="400" fill="#e5e7eb" rx="8"/>
+  <rect x="170" y="200" width="60" height="80" fill="#9ca3af" rx="4"/>
+  <rect x="100" y="320" width="200" height="8" fill="#d1d5db" rx="4"/>
+  <rect x="120" y="340" width="160" height="8" fill="#d1d5db" rx="4"/>
+  <rect x="140" y="360" width="120" height="8" fill="#d1d5db" rx="4"/>
+  <text x="200" y="550" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="14">Book Cover</text>
+</svg>

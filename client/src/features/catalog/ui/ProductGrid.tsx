@@ -22,10 +22,10 @@ export function ProductGrid() {
         {products.map(p => <ProductCard key={p.id} p={p} />)}
       </div>
       <div className="flex items-center justify-center gap-2">
-        <button disabled={page<=0} className="btn btn-interactive hover:animate-shake"
+        <button disabled={page<=0} className="btn btn-interactive hover:animate-shake bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 font-semibold px-4 py-2"
                 onClick={()=>loadProducts({ page: page-1 })}>Prev</button>
-        <span>Page {page+1} / {totalPages}</span>
-        <button disabled={page+1>=totalPages} className="btn btn-interactive hover:animate-shake"
+        <span className="text-white dark:text-white font-medium px-3">Page {page+1} / {totalPages}</span>
+        <button disabled={page+1>=totalPages} className="btn btn-interactive hover:animate-shake bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 font-semibold px-4 py-2"
                 onClick={()=>loadProducts({ page: page+1 })}>Next</button>
       </div>
     </div>
