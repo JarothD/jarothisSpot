@@ -1,0 +1,7 @@
+[
+  { "name": "Cyberpunk", "type": "GENRE_BOOK", "colorHex": "#f59e0b" },
+  { "name": "Sci Fi",     "type": "GENRE_BOOK", "colorHex": "#22c55e" },
+  { "name": "Filosofia",  "type": "GENRE_BOOK", "colorHex": "#6366f1" },
+  { "name": "Manga",      "type": "GENRE_BOOK", "colorHex": "#ef4444" },
+  { "name": "Novela",     "type": "GENRE_BOOK", "colorHex": "#3b82f6" }
+]

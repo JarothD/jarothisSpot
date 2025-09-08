@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { login } from '@features/auth/api/auth.api'
 import { useAuthStore } from '@features/auth/model/auth.store'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import axios from 'axios'
 
 /**
@@ -122,6 +122,13 @@ export function LoginForm() {
       >
         {isSubmitting ? 'Signing in…' : 'Sign in'}
       </button>
+
+      <div className="text-center text-sm">
+        <span className="text-gray-600">Don't have an account? </span>
+        <Link to="/register" className="text-black underline hover:no-underline">
+          Sign up
+        </Link>
+      </div>
     </form>
   )
 }

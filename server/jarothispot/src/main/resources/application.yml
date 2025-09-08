@@ -1,9 +1,9 @@
 spring:
   application:
     name: jarothispot
-  #docker:
-  #  compose:
-  #    enabled: false
+  docker:
+    compose:
+      enabled: false
   datasource:
     url: jdbc:postgresql://localhost:5432/jarothi
     username: postgres
