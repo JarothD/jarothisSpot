@@ -165,7 +165,7 @@ export function RegisterForm() {
         type="submit"
         disabled={isSubmitting}
         aria-busy={isSubmitting || undefined}
-        className="inline-flex w-full items-center justify-center rounded bg-black px-4 py-2 text-white disabled:opacity-60"
+        className="btn btn-interactive hover:animate-shake w-full bg-black text-white disabled:opacity-60"
       >
         {isSubmitting ? 'Creating account…' : 'Sign Up'}
       </button>

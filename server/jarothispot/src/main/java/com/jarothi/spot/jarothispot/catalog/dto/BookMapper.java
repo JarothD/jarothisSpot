@@ -17,7 +17,7 @@ public interface BookMapper {
     /**
      * Convert Book entity to ProductDTO
      */
-    @Mapping(target = "productType", constant = "BOOK")
+    @Mapping(target = "productType", expression = "java(com.jarothi.spot.jarothispot.catalog.ProductType.BOOK)")
     ProductDTO toProductDTO(Book book);
 
     /**
