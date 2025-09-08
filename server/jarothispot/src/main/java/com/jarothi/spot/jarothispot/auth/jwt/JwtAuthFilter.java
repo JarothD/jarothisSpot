@@ -33,7 +33,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       @org.springframework.lang.NonNull FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getServletPath();
-    if (path.startsWith("/actuator") || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
+    if (path.startsWith("/actuator") || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.startsWith("/api/auth/")) {
         filterChain.doFilter(request, response);
         return;
     }

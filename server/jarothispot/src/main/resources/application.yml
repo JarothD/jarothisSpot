@@ -1,10 +1,13 @@
 spring:
   application:
     name: jarothispot
+  #docker:
+  #  compose:
+  #    enabled: false
   datasource:
     url: jdbc:postgresql://localhost:5432/jarothi
-    username: jarothi
-    password: ${DB_PASSWORD:changeMeToASecurePassword}
+    username: postgres
+    password: ${DB_PASSWORD:postgrespass}
     driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
@@ -42,6 +45,8 @@ logging:
     "[org.springframework.jdbc]": WARN
     "[com.zaxxer.hikari]": WARN
     "[org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer]": ERROR
+    "[org.springframework.security]": DEBUG
+    "[com.jarothi.spot.jarothispot.security]": DEBUG
     "[com.jarothi.spot.jarothispot]": DEBUG
 
 management:

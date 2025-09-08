@@ -34,6 +34,8 @@ public class SecurityConfig {
       .csrf(csrf -> csrf.disable())
       .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(auth -> auth
+          .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+          .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
           .requestMatchers("/api/auth/**").permitAll()
           .requestMatchers("/actuator/**").permitAll()
           .requestMatchers("/v3/api-docs/**").permitAll()
@@ -71,7 +73,7 @@ public class SecurityConfig {
       "http://127.0.0.1",
       "http://localhost:5173"   // Vite dev server
       ));
-    cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+    cfg.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
     cfg.setAllowedHeaders(List.of("Authorization","Content-Type","X-Requested-With","Accept","Origin"));
     cfg.setAllowCredentials(true);
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

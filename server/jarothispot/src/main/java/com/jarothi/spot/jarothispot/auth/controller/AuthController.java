@@ -1,9 +1,16 @@
 package com.jarothi.spot.jarothispot.auth.controller;
 
+import com.jarothi.spot.jarothispot.auth.dto.RegisterRequest;
+import com.jarothi.spot.jarothispot.auth.dto.RegisterResponse;
 import com.jarothi.spot.jarothispot.auth.jwt.JwtService;
+import com.jarothi.spot.jarothispot.auth.service.AuthService;
 import com.jarothi.spot.jarothispot.user.User;
 import com.jarothi.spot.jarothispot.user.UserRepository;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,15 +22,25 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Auth", description = "Authentication operations")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final AuthService authService;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository) {
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository, AuthService authService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
+        this.authService = authService;
+    }
+
+    @PostMapping("/register")
+    @Operation(summary = "Register a new user", tags = "Auth")
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
+        RegisterResponse response = authService.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
