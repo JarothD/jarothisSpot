@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: jarothispot
+  datasource:
+    url: jdbc:postgresql://localhost:5432/jarothi
+    username: jarothi
+    password: ${DB_PASSWORD:changeMeToASecurePassword}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    show-sql: false    
+  flyway:
+    enabled: true
+    #baseline-on-migrate: true
+admin:
+  email: ${ADMIN_EMAIL:admin@admin.com}
+  password: ${ADMIN_PASSWORD:jarothi1234!$}
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+jwt:
+  secret: ${JWT_SECRET:thisIsASecretKeyForJWTGeneration}
+  expiration: ${JWT_EXPIRATION_MS:86400000}
+
+server:
+  port: 8080
+  error:
+    include-message: always
+
+logging:
+  level:    
+    root: INFO
+    "[org.hibernate]": WARN
+    "[org.springframework.orm.jpa]": WARN
+    "[org.springframework.jdbc]": WARN
+    "[com.zaxxer.hikari]": WARN
+    "[org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer]": ERROR
+    "[com.jarothi.spot.jarothispot]": DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true 

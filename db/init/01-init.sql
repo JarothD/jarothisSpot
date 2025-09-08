@@ -1,0 +1,9 @@
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'app') THEN
+    CREATE ROLE app WITH LOGIN PASSWORD 'secret';
+  END IF;
+END
+$$;
+
+GRANT ALL PRIVILEGES ON DATABASE jarothi TO app;

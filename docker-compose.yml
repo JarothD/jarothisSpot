@@ -1,0 +1,55 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: jarothi
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d jarothi"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build: ./server/jarothispot
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/jarothi
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgrespass
+      JWT_SECRET_BASE64: "UkVQTEFDRV9USElTX1dJVEhfU1RST05HX1JBTkRPTV9TRUNSRVRfS0VZX0JBU0U2NA=="
+      SERVER_ADDRESS: 0.0.0.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/actuator/health"]
+      interval: 3s
+      timeout: 1s
+      retries: 3
+      start_period: 5s
+
+  client:
+    build: ./client
+    ports:
+      - "80:80"
+    depends_on:
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/actuator/health"]
+      interval: 3s
+      timeout: 1s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  pgdata:

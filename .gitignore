@@ -1,0 +1,28 @@
+# --- Global / IDE ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# --- Root envs ---
+.env
+.env.*
+
+# --- Java / Spring (server/jarothispot) ---
+server/jarothispot/target/
+server/jarothispot/.mvn/
+server/jarothispot/mvnw
+server/jarothispot/mvnw.cmd
+*.log
+*.h2.db
+
+# --- Node / React (client) ---
+client/node_modules/
+client/.vite/
+client/dist/
+client/.eslintcache
+
+# --- Docker ---
+*.pid
+docker-data/
