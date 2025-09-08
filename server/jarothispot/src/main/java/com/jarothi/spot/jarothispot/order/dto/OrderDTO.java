@@ -1,6 +1,9 @@
 package com.jarothi.spot.jarothispot.order.dto;
 
+import com.jarothi.spot.jarothispot.order.Order;
+
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -9,6 +12,8 @@ public class OrderDTO {
 
     private UUID id;
     private BigDecimal total;
+    private Order.OrderStatus status;
+    private Instant createdAt;
     private List<OrderItemDTO> items;
 
     // Constructors
@@ -16,9 +21,11 @@ public class OrderDTO {
         this.items = new ArrayList<>();
     }
 
-    public OrderDTO(UUID id, BigDecimal total, List<OrderItemDTO> items) {
+    public OrderDTO(UUID id, BigDecimal total, Order.OrderStatus status, Instant createdAt, List<OrderItemDTO> items) {
         this.id = id;
         this.total = total;
+        this.status = status;
+        this.createdAt = createdAt;
         this.items = items != null ? items : new ArrayList<>();
     }
 
@@ -39,6 +46,22 @@ public class OrderDTO {
         this.total = total;
     }
 
+    public Order.OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(Order.OrderStatus status) {
+        this.status = status;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public List<OrderItemDTO> getItems() {
         return items;
     }
@@ -55,7 +78,7 @@ public class OrderDTO {
     }
 
     public int getTotalItems() {
-        return items.stream().mapToInt(OrderItemDTO::getQuantity).sum();
+        return items.stream().mapToInt(OrderItemDTO::getQty).sum();
     }
 
     @Override

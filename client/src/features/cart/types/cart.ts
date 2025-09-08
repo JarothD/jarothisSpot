@@ -1,18 +1,16 @@
 export interface CartItemDTO {
   id: string
   productId: string
-  productTitle: string
-  productPrice: number
-  quantity: number
-  subtotal: number
+  title: string
+  price: number
+  qty: number
+  imageUrl: string
 }
 
 export interface CartDTO {
   id: string
-  userId: string
   items: CartItemDTO[]
-  total: number
-  itemCount: number
+  subtotal: number
 }
 
 export interface AddCartItemRequest {

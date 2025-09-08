@@ -4,7 +4,7 @@ import { useCartStore } from '@features/cart/model/cart.store'
 import { useAuthStore } from '@features/auth/model/auth.store'
 import { toast } from '@shared/store/toast.store'
 import { useNavigate } from 'react-router-dom'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 export function ProductCard({ p }: { readonly p: ProductDTO }) {
@@ -20,9 +20,7 @@ export function ProductCard({ p }: { readonly p: ProductDTO }) {
 
   // Wait for auth to be ready
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setAuthReady(true)
-    }, 200)
+    const timer = setTimeout(() => setAuthReady(true), 200)
     return () => clearTimeout(timer)
   }, [])
 
@@ -31,80 +29,32 @@ export function ProductCard({ p }: { readonly p: ProductDTO }) {
       const stored = localStorage.getItem('auth-store')
       if (stored) {
         const parsed = JSON.parse(stored)
-        const token = parsed.state?.accessToken || null
-        
-        // Validate token format (should be JWT)
-        if (token && typeof token === 'string' && token.includes('.')) {
-          return token
-        }
+        return parsed.state?.accessToken || null
       }
-    } catch (error) {
-      console.error('Error parsing localStorage:', error)
+    } catch {
+      // Ignore errors
     }
     return null
   }
 
-  // Reactive authentication check
-  const isAuthenticated = useMemo(() => {
-    return accessToken || getStoredToken()
-  }, [accessToken])
-
-  // Test function for manual debugging (call from browser console)
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).debugAuth = () => {
-      console.log('=== MANUAL AUTH DEBUG ===')
-      console.log('useAuthStore state:', useAuthStore.getState())
-      console.log('localStorage auth-store:', localStorage.getItem('auth-store'))
-      console.log('Current accessToken:', accessToken)
-      console.log('getStoredToken():', getStoredToken())
-      console.log('isAuthenticated:', isAuthenticated)
-      console.log('authReady:', authReady)
-    }
-    
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).testCartRequest = async () => {
-      console.log('=== MANUAL CART TEST ===')
-      try {
-        const { http } = await import('@shared/api/http')
-        const response = await http.post('/cart/items', {
-          productId: p.id,
-          qty: 1
-        })
-        console.log('✅ Cart request success:', response.data)
-      } catch (error) {
-        console.log('❌ Cart request failed:', error)
-      }
-    }
-  }, [accessToken, authReady, isAuthenticated, p.id])
+  const isAuthenticated = accessToken || getStoredToken()
 
   const handleAddToCart = async () => {
     if (isOutOfStock || isAdding || !authReady) return
     
-    console.log('🛒 Adding to cart:', p.title)
-    console.log('Debug auth state:')
-    console.log('- accessToken from store:', !!accessToken)
-    console.log('- getStoredToken():', !!getStoredToken())
-    console.log('- isAuthenticated:', !!isAuthenticated)
-    console.log('- authReady:', authReady)
-    
     if (!isAuthenticated) {
-      console.log('❌ Not authenticated, redirecting to login')
       toast.error('Please log in to add items to cart')
       navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`)
       return
     }
 
-    console.log('✅ Authentication check passed, proceeding...')
     setIsAdding(true)
     try {
       await addToCart({ productId: p.id, qty: 1 })
-      console.log('✅ Added to cart successfully')
       
       setShowSuccess(true)
       setTimeout(() => setShowSuccess(false), 1000)
     } catch (error) {
-      console.error('❌ Add to cart failed:', error)
       handleError(error)
     } finally {
       setIsAdding(false)

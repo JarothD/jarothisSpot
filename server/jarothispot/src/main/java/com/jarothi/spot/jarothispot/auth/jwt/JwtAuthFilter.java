@@ -32,29 +32,37 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       @org.springframework.lang.NonNull HttpServletResponse response,
       @org.springframework.lang.NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        String path = request.getServletPath();
+    String path = request.getServletPath();
+    
     if (path.startsWith("/actuator") || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.startsWith("/api/auth/")) {
         filterChain.doFilter(request, response);
         return;
     }
 
     final String authHeader = request.getHeader("Authorization");
+    
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
       filterChain.doFilter(request, response);
       return;
     }
 
     final String jwt = authHeader.substring(7);
-    final String username = jwtService.extractUsername(jwt);
+    
+    try {
+      final String username = jwtService.extractUsername(jwt);
 
-    if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-      UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-      if (jwtService.isTokenValid(jwt, userDetails.getUsername())) {
-        UsernamePasswordAuthenticationToken authToken =
-            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+      if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        
+        if (jwtService.isTokenValid(jwt, userDetails.getUsername())) {
+          UsernamePasswordAuthenticationToken authToken =
+              new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+          authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authToken);
+        }
       }
+    } catch (Exception e) {
+      // Token validation failed - user remains unauthenticated
     }
 
     filterChain.doFilter(request, response);

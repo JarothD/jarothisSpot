@@ -9,9 +9,9 @@ public class OrderItemDTO {
     private UUID productId;
     private String title;
     private String imageUrl;
-    private int quantity;
+    private int qty;
     private BigDecimal unitPrice;
-    private BigDecimal totalPrice;
+    private BigDecimal lineTotal;
 
     // Constructors
     public OrderItemDTO() {
@@ -19,14 +19,14 @@ public class OrderItemDTO {
     }
 
     public OrderItemDTO(UUID id, UUID productId, String title, String imageUrl, 
-                       int quantity, BigDecimal unitPrice, BigDecimal totalPrice) {
+                       int qty, BigDecimal unitPrice, BigDecimal lineTotal) {
         this.id = id;
         this.productId = productId;
         this.title = title;
         this.imageUrl = imageUrl;
-        this.quantity = quantity;
+        this.qty = qty;
         this.unitPrice = unitPrice;
-        this.totalPrice = totalPrice;
+        this.lineTotal = lineTotal;
     }
 
     // Getters and Setters
@@ -62,12 +62,12 @@ public class OrderItemDTO {
         this.imageUrl = imageUrl;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getQty() {
+        return qty;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setQty(int qty) {
+        this.qty = qty;
     }
 
     public BigDecimal getUnitPrice() {
@@ -78,12 +78,12 @@ public class OrderItemDTO {
         this.unitPrice = unitPrice;
     }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
+    public BigDecimal getLineTotal() {
+        return lineTotal;
     }
 
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setLineTotal(BigDecimal lineTotal) {
+        this.lineTotal = lineTotal;
     }
 
     @Override

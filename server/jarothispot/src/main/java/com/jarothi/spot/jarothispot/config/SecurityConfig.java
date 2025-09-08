@@ -28,6 +28,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private static final String API_PRODUCTS_PATTERN = "/api/products/**";
+    private static final String API_CART_PATTERN = "/api/cart/**";
     private static final String API_ROLE_ADM_STRING = "ADMIN";
 
     private final JwtAuthFilter jwtAuthFilter;
@@ -58,7 +59,12 @@ public class SecurityConfig {
           .requestMatchers(HttpMethod.POST, "/api/categories").hasRole(API_ROLE_ADM_STRING)
           .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasRole(API_ROLE_ADM_STRING)
           .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole(API_ROLE_ADM_STRING)
-          .requestMatchers("/api/cart/**").authenticated()
+          .requestMatchers(HttpMethod.GET, API_CART_PATTERN).authenticated()
+          .requestMatchers(HttpMethod.POST, API_CART_PATTERN).authenticated()
+          .requestMatchers(HttpMethod.PUT, API_CART_PATTERN).authenticated()
+          .requestMatchers(HttpMethod.PATCH, API_CART_PATTERN).authenticated()
+          .requestMatchers(HttpMethod.DELETE, API_CART_PATTERN).authenticated()
+          .requestMatchers("/api/orders/**").authenticated()
           .anyRequest().authenticated()
       )
       
@@ -85,7 +91,8 @@ public class SecurityConfig {
       "http://localhost",        // Docker/Nginx :80
       "http://localhost:80",
       "http://127.0.0.1",
-      "http://localhost:5173"   // Vite dev server
+      "http://127.0.0.1:80",
+      "http://localhost:5173"   // Vite dev server (for development)
       ));
     cfg.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
     cfg.setAllowedHeaders(List.of("Authorization","Content-Type","X-Requested-With","Accept","Origin"));

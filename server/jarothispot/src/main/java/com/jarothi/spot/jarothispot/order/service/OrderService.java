@@ -15,6 +15,8 @@ import com.jarothi.spot.jarothispot.order.dto.OrderItemDTO;
 import com.jarothi.spot.jarothispot.order.repository.OrderRepository;
 import com.jarothi.spot.jarothispot.user.User;
 import com.jarothi.spot.jarothispot.user.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -120,6 +122,12 @@ public class OrderService {
         return mapToOrderDTO(order);
     }
 
+    public Page<OrderDTO> getMyOrders(Pageable pageable) {
+        User currentUser = getCurrentUser();
+        Page<Order> orders = orderRepository.findByUserIdOrderByCreatedAtDesc(currentUser.getId(), pageable);
+        return orders.map(this::mapToOrderDTO);
+    }
+
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -136,7 +144,7 @@ public class OrderService {
             .map(this::mapToOrderItemDTO)
             .toList();
 
-        return new OrderDTO(order.getId(), order.getTotal(), itemDTOs);
+        return new OrderDTO(order.getId(), order.getTotal(), order.getStatus(), order.getCreatedAt(), itemDTOs);
     }
 
     private OrderItemDTO mapToOrderItemDTO(OrderItem orderItem) {

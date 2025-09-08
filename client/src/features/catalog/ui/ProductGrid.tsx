@@ -1,6 +1,7 @@
 import { useCatalogStore } from '@shared/store/catalog.store'
 import { ProductCard } from './ProductCard'
 import { ProductSkeleton } from '@shared/ui/ProductSkeleton'
+// import { AuthDebugPanel } from '@features/auth/ui/AuthDebugPanel'
 
 export function ProductGrid() {
   const { products, totalPages, page, loadProducts, loading } = useCatalogStore()
@@ -16,6 +17,7 @@ export function ProductGrid() {
   if (!products.length) return <div className="py-10 text-center">No books found.</div>
   return (
     <div className="space-y-6">
+      {/* <AuthDebugPanel /> */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {products.map(p => <ProductCard key={p.id} p={p} />)}
       </div>

@@ -23,7 +23,11 @@ const CartIcon = () => (
 export function CartButton() {
   const navigate = useNavigate()
   const { accessToken } = useAuthStore()
-  const { count, loadCart } = useCartStore()
+  const cart = useCartStore(state => state.cart)
+  const loadCart = useCartStore(state => state.loadCart)
+
+  // Calculate count from cart items
+  const count = cart?.items.reduce((sum, item) => sum + item.qty, 0) || 0
 
   // Load cart when authenticated
   useEffect(() => {

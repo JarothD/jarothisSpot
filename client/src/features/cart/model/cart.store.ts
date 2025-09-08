@@ -23,10 +23,10 @@ interface CartState {
   selectAllItems: () => void
   clearSelection: () => void
   
-  // Computed values
-  count: number
-  totalSelected: number
-  selectedCount: number
+  // Computed helper functions
+  getCount: () => number
+  getTotalSelected: () => number
+  getSelectedCount: () => number
 }
 
 export const useCartStore = create<CartState>()(
@@ -56,10 +56,12 @@ export const useCartStore = create<CartState>()(
           console.error('Failed to add to cart:', error)
           set({ loading: false })
           
-          // Check for stock conflicts (409 or 422)
-          if (axios.isAxiosError(error) && (error.response?.status === 409 || error.response?.status === 422)) {
+          // Check for stock conflicts (409)
+          if (axios.isAxiosError(error) && error.response?.status === 409) {
             throw new Error('INSUFFICIENT_STOCK')
           }
+          
+          // Re-throw the original error for the UI to handle authentication errors
           throw error
         }
       },
@@ -163,21 +165,21 @@ export const useCartStore = create<CartState>()(
         set({ selectedItemIds: new Set() })
       },
       
-      // Computed values
-      get count() {
-        return get().cart?.itemCount || 0
+      // Computed helper functions
+      getCount: () => {
+        return get().cart?.items.reduce((sum, item) => sum + item.qty, 0) || 0
       },
       
-      get totalSelected() {
+      getTotalSelected: () => {
         const { cart, selectedItemIds } = get()
         if (!cart) return 0
         
         return cart.items
           .filter(item => selectedItemIds.has(item.id))
-          .reduce((sum, item) => sum + item.subtotal, 0)
+          .reduce((sum, item) => sum + (item.price * item.qty), 0)
       },
       
-      get selectedCount() {
+      getSelectedCount: () => {
         return get().selectedItemIds.size
       }
     }),

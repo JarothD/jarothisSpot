@@ -97,12 +97,12 @@ public class CartService {
             // Create new cart item
             CartItem newItem = new CartItem(cart, product, request.getQty());
             cartItemRepository.save(newItem);
-            cart.addItem(newItem);
+            // Don't manipulate the managed cart entity directly
         }
 
-        // Reload cart with items to get updated data
-        cart = cartRepository.findByUserIdWithItems(currentUser.getId()).orElse(cart);
-        return mapToCartDTO(cart);
+        // Return fresh cart data by reloading from database
+        Cart freshCart = cartRepository.findByUserId(currentUser.getId()).orElseThrow();
+        return mapToCartDTO(freshCart);
     }
 
     public CartDTO updateItem(UUID itemId, UpdateCartItemRequest request) {

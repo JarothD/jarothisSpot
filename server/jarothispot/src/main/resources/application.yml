@@ -45,17 +45,12 @@ logging:
     "[org.springframework.jdbc]": WARN
     "[com.zaxxer.hikari]": WARN
     "[org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer]": ERROR
-    "[org.springframework.security]": DEBUG
-    "[com.jarothi.spot.jarothispot.security]": DEBUG
-    "[com.jarothi.spot.jarothispot]": DEBUG
+    "[org.springframework.security]": WARN
+    "[com.jarothi.spot.jarothispot.security]": INFO
+    "[com.jarothi.spot.jarothispot]": INFO
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
-  endpoint:
-    health:
-      show-details: never
-      probes:
-        enabled: true 
+        include: [] 

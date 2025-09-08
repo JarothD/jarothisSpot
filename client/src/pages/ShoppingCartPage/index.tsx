@@ -8,22 +8,24 @@ import { CartSkeleton } from '@shared/ui/CartSkeleton'
 export function ShoppingCartPage() {
   const navigate = useNavigate()
   const { accessToken } = useAuthStore()
-  const {
-    cart,
-    loading,
-    selectedItemIds,
-    loadCart,
-    updateQuantity,
-    removeItem,
-    toggleItemSelection,
-    selectAllItems,
-    clearSelection,
-    checkout,
-    totalSelected,
-    selectedCount
-  } = useCartStore()
+  const cart = useCartStore(state => state.cart)
+  const loading = useCartStore(state => state.loading)
+  const selectedItemIds = useCartStore(state => state.selectedItemIds)
+  const loadCart = useCartStore(state => state.loadCart)
+  const updateQuantity = useCartStore(state => state.updateQuantity)
+  const removeItem = useCartStore(state => state.removeItem)
+  const toggleItemSelection = useCartStore(state => state.toggleItemSelection)
+  const selectAllItems = useCartStore(state => state.selectAllItems)
+  const clearSelection = useCartStore(state => state.clearSelection)
+  const checkout = useCartStore(state => state.checkout)
   
   const [isCheckingOut, setIsCheckingOut] = useState(false)
+
+  // Calculate values from current state
+  const selectedCount = selectedItemIds.size
+  const totalSelected = cart?.items
+    .filter(item => selectedItemIds.has(item.id))
+    .reduce((sum, item) => sum + (item.price * item.qty), 0) || 0
 
   useEffect(() => {
     // Redirect to login if not authenticated
@@ -159,23 +161,23 @@ export function ShoppingCartPage() {
               
               {/* Item Details */}
               <div className="flex-1">
-                <h3 className="font-semibold text-lg">{item.productTitle}</h3>
-                <p className="text-neutral-600 dark:text-neutral-400">${item.productPrice.toFixed(2)} each</p>
+                <h3 className="font-semibold text-lg">{item.title}</h3>
+                <p className="text-neutral-600 dark:text-neutral-400">${item.price?.toFixed(2) || '0.00'} each</p>
                 
                 {/* Quantity Controls */}
                 <div className="flex items-center gap-3 mt-3">
                   <span className="text-sm">Quantity:</span>
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                      disabled={item.quantity <= 1}
+                      onClick={() => handleQuantityChange(item.id, item.qty - 1)}
+                      disabled={item.qty <= 1}
                       className="w-8 h-8 rounded border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed hover:animate-shake"
                     >
                       -
                     </button>
-                    <span className="w-12 text-center font-medium">{item.quantity}</span>
+                    <span className="w-12 text-center font-medium">{item.qty}</span>
                     <button
-                      onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                      onClick={() => handleQuantityChange(item.id, item.qty + 1)}
                       className="w-8 h-8 rounded border border-neutral-300 dark:border-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:animate-shake"
                     >
                       +
@@ -186,7 +188,7 @@ export function ShoppingCartPage() {
               
               {/* Subtotal and Remove */}
               <div className="text-right">
-                <div className="font-semibold text-lg mb-2">${item.subtotal.toFixed(2)}</div>
+                <div className="font-semibold text-lg mb-2">${((item.price || 0) * (item.qty || 0)).toFixed(2)}</div>
                 <button
                   onClick={() => handleRemoveItem(item.id)}
                   className="text-red-600 hover:text-red-800 text-sm"
@@ -204,10 +206,10 @@ export function ShoppingCartPage() {
         <div className="flex justify-between items-center mb-4">
           <div className="text-lg">
             <span className="text-neutral-600 dark:text-neutral-400">Cart Total: </span>
-            <span className="font-semibold">${cart.total.toFixed(2)}</span>
+            <span className="font-semibold">${cart.subtotal?.toFixed(2) || '0.00'}</span>
           </div>
           <div className="text-sm text-neutral-500">
-            {cart.itemCount} {cart.itemCount === 1 ? 'item' : 'items'}
+            {cart.items.reduce((sum, item) => sum + item.qty, 0)} {cart.items.reduce((sum, item) => sum + item.qty, 0) === 1 ? 'item' : 'items'}
           </div>
         </div>
 
