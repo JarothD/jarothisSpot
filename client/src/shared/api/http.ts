@@ -34,7 +34,6 @@ http.interceptors.request.use((config) => {
   
   return config
 }, (error: AxiosError) => {
-  console.log('❌ Request interceptor error:', error)
   return Promise.reject(error)
 })
 
@@ -43,11 +42,6 @@ http.interceptors.response.use(
     return response
   },
   async (error: AxiosError) => {
-    // Only log non-health check errors
-    if (!error.config?.url?.includes('actuator/health')) {
-      console.log('❌ HTTP Error:', error.response?.status, error.config?.url)
-    }
-    
     const original = error.config
     if (!original) return Promise.reject(error)
 
@@ -63,11 +57,9 @@ http.interceptors.response.use(
       isRefreshing = true
 
       try {
-        console.log('🔄 Attempting token refresh...')
         const { refresh } = await import('@features/auth/api/auth.api')
         const newToken = await refresh()
         useAuthStore.getState().setAccessToken(newToken)
-        console.log('✅ Token refreshed successfully')
         
         // Resolve all queued requests
         queue.forEach((resolve) => resolve())
@@ -76,7 +68,6 @@ http.interceptors.response.use(
         // Retry the original request with new token
         return http(original)
       } catch {
-        console.log('❌ Token refresh failed, logging out')
         // If refresh fails, logout and redirect to login
         useAuthStore.getState().logout()
         queue.forEach((resolve) => resolve())
@@ -89,7 +80,6 @@ http.interceptors.response.use(
 
     // Handle 403 (Forbidden) - usually means invalid token
     if (error.response?.status === 403) {
-      console.log('❌ 403 Forbidden - Token may be invalid')
       // Clear the token and force re-login
       useAuthStore.getState().logout()
     }
