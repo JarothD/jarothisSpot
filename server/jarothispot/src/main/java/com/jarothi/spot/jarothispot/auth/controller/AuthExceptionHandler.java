@@ -1,5 +1,6 @@
 package com.jarothi.spot.jarothispot.auth.controller;
 
+import com.jarothi.spot.jarothispot.order.exception.InsufficientStockException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -26,6 +27,15 @@ public class AuthExceptionHandler {
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", ex.getReason());
         return ResponseEntity.status(ex.getStatusCode()).body(errorResponse);
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<Map<String, Object>> handleInsufficientStockException(InsufficientStockException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("productId", ex.getProductId());
+        errorResponse.put("requested", ex.getRequested());
+        errorResponse.put("available", ex.getAvailable());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -31,6 +31,9 @@ public abstract class Product {
     @Column(name = "active", nullable = false)
     private boolean active = true;
 
+    @Column(name = "stock", nullable = false)
+    private int stock = 0;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
         name = "product_categories",
@@ -48,6 +51,14 @@ public abstract class Product {
         this.title = title;
         this.description = description;
         this.price = price;
+        this.stock = 0; // Default stock
+    }
+
+    protected Product(String title, String description, BigDecimal price, int stock) {
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
     }
 
     // Getters and Setters
@@ -97,6 +108,14 @@ public abstract class Product {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     public Set<Category> getCategories() {

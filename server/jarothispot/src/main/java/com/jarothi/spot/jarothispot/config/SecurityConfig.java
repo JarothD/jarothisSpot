@@ -58,6 +58,7 @@ public class SecurityConfig {
           .requestMatchers(HttpMethod.POST, "/api/categories").hasRole(API_ROLE_ADM_STRING)
           .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasRole(API_ROLE_ADM_STRING)
           .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole(API_ROLE_ADM_STRING)
+          .requestMatchers("/api/cart/**").authenticated()
           .anyRequest().authenticated()
       )
       
