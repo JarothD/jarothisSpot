@@ -26,3 +26,10 @@ client/.eslintcache
 # --- Docker ---
 *.pid
 docker-data/
+*.tar
+*.tar.gz
+*-images-*
+blobs/
+oci-layout
+index.json
+manifest.json
