@@ -10,6 +10,7 @@ import com.jarothi.spot.jarothispot.cart.repository.CartRepository;
 import com.jarothi.spot.jarothispot.cart.repository.CartItemRepository;
 import com.jarothi.spot.jarothispot.catalog.Product;
 import com.jarothi.spot.jarothispot.catalog.ProductRepository;
+import com.jarothi.spot.jarothispot.catalog.exception.InsufficientStockException;
 import com.jarothi.spot.jarothispot.user.User;
 import com.jarothi.spot.jarothispot.user.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -64,6 +65,11 @@ public class CartService {
             throw new IllegalArgumentException("Product is not available");
         }
 
+        // Check stock availability
+        if (product.getStock() < request.getQty()) {
+            throw new InsufficientStockException(product.getId(), request.getQty(), product.getStock());
+        }
+
         // Get or create cart
         Cart cart = cartRepository.findByUserId(currentUser.getId())
             .orElseGet(() -> {
@@ -78,7 +84,14 @@ public class CartService {
         if (existingItemOpt.isPresent()) {
             // Update existing item quantity
             CartItem existingItem = existingItemOpt.get();
-            existingItem.setQuantity(existingItem.getQuantity() + request.getQty());
+            int newQuantity = existingItem.getQuantity() + request.getQty();
+            
+            // Check if new total quantity exceeds stock
+            if (product.getStock() < newQuantity) {
+                throw new InsufficientStockException(product.getId(), newQuantity, product.getStock());
+            }
+            
+            existingItem.setQuantity(newQuantity);
             cartItemRepository.save(existingItem);
         } else {
             // Create new cart item

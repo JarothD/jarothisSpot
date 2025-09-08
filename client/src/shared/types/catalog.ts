@@ -18,6 +18,7 @@ export type ProductDTO = {
   imageUrl: string
   active: boolean
   categories: CategoryDTO[]
+  stock?: number
 }
 
 export type PageResponse<T> = {

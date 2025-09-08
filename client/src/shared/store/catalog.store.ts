@@ -75,7 +75,7 @@ export const useCatalogStore = create<CatalogState>()(persist((set, get) => ({
     }
   },
 }), {
-  name: 'catalog-v1',
+  name: 'catalog-v2', // Changed version to reset cache
   partialize: (s) => ({
     categories: s.categories,
     products: s.products,

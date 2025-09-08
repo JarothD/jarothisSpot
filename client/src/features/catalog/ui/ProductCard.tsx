@@ -1,8 +1,97 @@
 import { ProductDTO } from '@shared/types/catalog'
 import { buildImage } from '@shared/utils/image'
+import { useCartStore } from '@features/cart/model/cart.store'
+import { useAuthStore } from '@features/auth/model/auth.store'
+import { toast } from '@shared/store/toast.store'
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import axios from 'axios'
 
 export function ProductCard({ p }: { readonly p: ProductDTO }) {
+  const navigate = useNavigate()
   const imgUrl = buildImage(p.imageUrl, 400, 600)
+  const { addToCart, loading } = useCartStore()
+  const { accessToken } = useAuthStore()
+  const [isAdding, setIsAdding] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+  
+  const isOutOfStock = p.stock !== undefined && p.stock === 0
+  
+  const handleAddToCart = async () => {
+    if (isOutOfStock || isAdding) return
+    
+    // Check if user is authenticated
+    if (!accessToken) {
+      navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`)
+      return
+    }
+    
+    setIsAdding(true)
+    try {
+      await addToCart({ productId: p.id, qty: 1 })
+      
+      // Show success feedback for 1 second
+      setShowSuccess(true)
+      setTimeout(() => {
+        setShowSuccess(false)
+      }, 1000)
+    } catch (error) {
+      console.error('Failed to add to cart:', error)
+      
+      // Handle different error types
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 409) {
+          // Stock conflict (409 Conflict)
+          toast.error('Insufficient stock available')
+        } else if (error.response?.status === 422) {
+          // Validation error (422 Unprocessable Entity) - also stock related
+          toast.error('Product out of stock')
+        } else {
+          toast.error('Failed to add to cart')
+        }
+      } else if (error instanceof Error && error.message === 'INSUFFICIENT_STOCK') {
+        toast.error('Insufficient stock')
+      } else {
+        toast.error('Failed to add to cart')
+      }
+    } finally {
+      setIsAdding(false)
+    }
+  }
+
+  const getButtonContent = () => {
+    if (isOutOfStock) return 'Out of Stock'
+    if (showSuccess) {
+      return (
+        <span className="flex items-center justify-center gap-2">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          Added!
+        </span>
+      )
+    }
+    if (isAdding) return 'Adding...'
+    return (
+      <span className="flex items-center justify-center gap-2">
+        <svg className="w-4 h-4 hover:animate-shake" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+        </svg>
+        Add to Cart
+      </span>
+    )
+  }
+
+  const getButtonStyles = () => {
+    if (isOutOfStock) {
+      return 'bg-neutral-200 text-neutral-500 cursor-not-allowed dark:bg-neutral-700 dark:text-neutral-400'
+    }
+    if (showSuccess) {
+      return 'bg-green-600 text-white'
+    }
+    return 'bg-blue-600 text-white hover:bg-blue-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed'
+  }
+
   return (
     <div className="rounded-2xl shadow p-3 bg-white dark:bg-neutral-900">
       <div className="aspect-[2/3] w-full overflow-hidden rounded-xl mb-3 bg-neutral-100 dark:bg-neutral-800">
@@ -25,7 +114,22 @@ export function ProductCard({ p }: { readonly p: ProductDTO }) {
                 style={{ backgroundColor: c.colorHex }}>{c.name}</span>
         ))}
       </div>
-      <div className="mt-2 font-semibold">${p.price.toFixed(2)}</div>
+      <div className="flex items-center justify-between mt-2">
+        <div className="font-semibold">${p.price.toFixed(2)}</div>
+        {p.stock !== undefined && (
+          <div className="text-xs text-neutral-500">
+            Stock: {p.stock}
+          </div>
+        )}
+      </div>
+      
+      <button
+        onClick={handleAddToCart}
+        disabled={isOutOfStock || isAdding || loading}
+        className={`w-full mt-3 px-4 py-2 rounded-lg font-medium text-sm transition-all hover:animate-shake ${getButtonStyles()}`}
+      >
+        {getButtonContent()}
+      </button>
     </div>
   )
 }

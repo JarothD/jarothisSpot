@@ -1,5 +1,6 @@
 package com.jarothi.spot.jarothispot.catalog;
 
+import com.jarothi.spot.jarothispot.catalog.exception.InsufficientStockException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,6 +32,16 @@ public class CatalogExceptionHandler {
         Map<String, String> error = new HashMap<>();
         error.put(ERROR_KEY, "Operation not allowed");
         error.put(MESSAGE_KEY, e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<Map<String, Object>> handleInsufficientStock(InsufficientStockException e) {
+        Map<String, Object> error = new HashMap<>();
+        error.put(ERROR_KEY, "Insufficient stock");
+        error.put("productId", e.getProductId().toString());
+        error.put("requested", e.getRequested());
+        error.put("available", e.getAvailable());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 

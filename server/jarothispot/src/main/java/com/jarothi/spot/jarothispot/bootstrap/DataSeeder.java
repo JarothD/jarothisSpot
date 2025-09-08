@@ -133,6 +133,13 @@ public class DataSeeder {
         Book book = new Book(bookData.title(), bookData.description(), bookData.price());
         book.setImageUrl(bookData.imageUrl());
         book.setActive(true);
+        
+        // Set stock if provided, otherwise default to 0
+        if (bookData.stock() != null) {
+            book.setStock(bookData.stock());
+        } else {
+            book.setStock(0);
+        }
 
         // Resolve and set categories
         Set<Category> categories = resolveCategoriesFromNames(bookData.categoriesByName());
@@ -176,6 +183,7 @@ public class DataSeeder {
         String title,
         String description,
         BigDecimal price,
+        Integer stock,
         String imageUrl,
         List<String> categoriesByName
     ) {}

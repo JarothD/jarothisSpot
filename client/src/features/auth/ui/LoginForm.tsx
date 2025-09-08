@@ -32,7 +32,12 @@ export function LoginForm() {
   const setAccessToken = useAuthStore((s) => s.setAccessToken)
   const navigate = useNavigate()
   const location = useLocation()
-  const fromPath = isFromState(location.state) && location.state.from?.pathname ? location.state.from.pathname : '/'
+  
+  // Check for redirect in URL params or location state
+  const searchParams = new URLSearchParams(location.search)
+  const redirectParam = searchParams.get('redirect')
+  const fromPath = redirectParam || 
+    (isFromState(location.state) && location.state.from?.pathname ? location.state.from.pathname : '/')
 
   const [formError, setFormError] = useState<string | null>(null)
 
